@@ -19,7 +19,7 @@ pipeline {
         stage('Pull Docker Image') {
             steps {
                 script {
-                    sh "echo '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' | docker login ghcr.io -u cwisky --password-stdin"
+                    sh "echo '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' | docker login ghcr.io -u cwisky --password-stdin"
                     //sh "sudo docker login ghcr.io -u cwisky -p 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"
                     sh "sudo docker pull ${DOCKER_IMAGE}"
                 }
