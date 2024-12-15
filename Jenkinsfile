@@ -13,7 +13,7 @@ pipeline {
             steps {
                 script {
                     echo "Cloning GitHub repository..." >> app.log
-                    git clone ${GITHUB_REPO} app || echo "Git clone failed. Check repository URL or credentials." >> app.log
+                    sh "git clone ${GITHUB_REPO} app || echo 'Git clone failed. Check repository URL or credentials.' >> app.log"
                 }
             }
         }
