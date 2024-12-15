@@ -8,12 +8,12 @@ pipeline {
     }
 
     stages {
-        /*
+        
         stage('Cleanup Workspace') {
             steps {
                 cleanWs()
             }
-        }*/
+        }
 
         stage('Checkout') {
             steps {
@@ -21,7 +21,7 @@ pipeline {
                 checkout scm // 현재 브랜치 소스를 클론
             }
         }
-
+        /*
         stage('Clone Repository') {
             steps {
                 script {
@@ -31,7 +31,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
 
         stage('Prepare JAR File') {
             steps {
