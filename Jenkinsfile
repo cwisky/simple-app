@@ -31,7 +31,7 @@ pipeline {
                     }
                 }
             }
-        }*/
+        }
 
         stage('Prepare JAR File') {
             steps {
@@ -64,7 +64,7 @@ pipeline {
                 }
             }
         }
-        /*
+        
         stage('Push to Docker Hub') {
             steps {
                 script {
@@ -77,7 +77,7 @@ pipeline {
                     }
                 }
             }
-        }*/
+        }
 
         stage('Run Docker Container') {
             steps {
@@ -90,7 +90,7 @@ pipeline {
                 }
             }
         }
-    }
+    }*/
 
     post {
         always {
