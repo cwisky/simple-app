@@ -22,7 +22,7 @@ pipeline {
                 script {
                     echo "Preparing JAR file..." >> app.log
                     dir('app') {
-                        sh "cp target/${JAR_FILE} ../"
+                        //sh "cp target/${JAR_FILE} ../"
                     }
                 }
             }
