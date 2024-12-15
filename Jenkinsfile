@@ -13,7 +13,7 @@ pipeline {
             steps {
                 script {
                     echo "Cloning GitHub repository..." >> app.log
-                    sh "git clone ${GITHUB_REPO} app"
+                    git clone ${GITHUB_REPO} app || echo "Git clone failed. Check repository URL or credentials." >> app.log
                 }
             }
         }
@@ -22,7 +22,14 @@ pipeline {
                 script {
                     echo "Preparing JAR file..." >> app.log
                     dir('app') {
-                        //sh "cp target/${JAR_FILE} ../"
+                        sh """
+                        if [ -f ${JAR_FILE} ]; then
+                            //cp target/${JAR_FILE} ../
+                        else
+                            echo "JAR file not found. Ensure the project is built correctly." >> ../app.log
+                            exit 1
+                        fi
+                        """
                     }
                 }
             }
