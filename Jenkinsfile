@@ -33,9 +33,9 @@ pipeline {
                     echo "Building Docker image..."
                     sh """
                     cat <<EOF > Dockerfile
-                    FROM openjdk:11-jre-slim
-                    COPY ${JAR_FILE} /app.jar
-                    CMD ["java", "-jar", "/app.jar"]
+                    FROM openjdk:21-jre-slim
+                    COPY ${JAR_FILE} /simple-app.jar
+                    CMD ["java", "-jar", "/simple-app.jar"]
                     EOF
                     """
                     sh "docker build -t ${DOCKER_IMAGE} ."
