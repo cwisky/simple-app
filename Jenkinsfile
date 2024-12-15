@@ -17,7 +17,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 script {
-                    echo "Cloning GitHub repository..."
+                    echo "Cloning GitHub repository..." >> app.log
                     withCredentials([usernamePassword(credentialsId: 'GitHub_ID_PWD', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
                         sh "git clone https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/cwisky/simple-app.git app"
                     }
@@ -28,7 +28,7 @@ pipeline {
         stage('Prepare JAR File') {
             steps {
                 script {
-                    echo "Preparing JAR file..."
+                    echo "Preparing JAR file..." >> app.log
                     dir('app') {
                         sh """
                         if [ -f ${JAR_FILE} ]; then
@@ -46,7 +46,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    echo "Building Docker image..."
+                    echo "Building Docker image..." >> app.log
                     writeFile file: 'Dockerfile', text: """
                     FROM openjdk:21-jre-slim
                     COPY ${JAR_FILE} /simple-app.jar
@@ -74,7 +74,7 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    echo "Running Docker container..."
+                    echo "Running Docker container..." >> app.log
                     sh """
                     docker ps -q --filter 'ancestor=${DOCKER_IMAGE}' | xargs --no-run-if-empty docker stop
                     docker run -d -p 8080:80 ${DOCKER_IMAGE}
@@ -86,7 +86,7 @@ pipeline {
 
     post {
         always {
-            echo "Cleaning up workspace..."
+            echo "Cleaning up workspace..." >> app.log
             //cleanWs()
         }
     }
