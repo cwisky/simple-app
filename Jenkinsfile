@@ -70,7 +70,7 @@ pipeline {
             }
         }
     }
-
+/*
     post {
         always {
             echo "Cleaning up workspace..." >> app.log
@@ -82,5 +82,5 @@ pipeline {
         failure {
             echo "Pipeline failed. Check logs for details." >> app.log
         }
-    }
+    }*/
 }
