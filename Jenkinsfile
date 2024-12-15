@@ -17,6 +17,13 @@ pipeline {
                 }
             }
         }
+
+        stage('Set Permissions') {
+            steps {
+                echo 'Setting permissions for Jenkins-auto-cicd-test directory...'
+                sh 'chmod -R 755 /var/lib/jenkins/workspace/Jenkins-auto-cicd-test/'
+            }
+        }
         stage('Prepare JAR File') {
             steps {
                 script {
