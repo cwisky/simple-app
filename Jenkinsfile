@@ -91,11 +91,11 @@ pipeline {
             }
         }*/
     }
-
+    /*
     post {
         always {
             echo "Cleaning up workspace..." >> app.log
             //cleanWs()
         }
-    }
+    }*/
 }
