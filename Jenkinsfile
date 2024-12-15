@@ -12,7 +12,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 script {
-                    echo "Cloning GitHub repository..."
+                    echo "Cloning GitHub repository..." >> app.log
                     sh "git clone ${GITHUB_REPO} app"
                 }
             }
@@ -20,7 +20,7 @@ pipeline {
         stage('Prepare JAR File') {
             steps {
                 script {
-                    echo "Preparing JAR file..."
+                    echo "Preparing JAR file..." >> app.log
                     dir('app') {
                         sh "cp target/${JAR_FILE} ../"
                     }
@@ -30,7 +30,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    echo "Building Docker image..."
+                    echo "Building Docker image..."  >> app.log
                     sh """
                     cat <<EOF > Dockerfile
                     FROM openjdk:21-jre-slim
@@ -45,7 +45,7 @@ pipeline {
         stage('Tag Docker Image') {
             steps {
                 script {
-                    echo "Tagging Docker image..."
+                    echo "Tagging Docker image..." >> app.log
                     sh "docker tag ${DOCKER_IMAGE} ${DOCKER_IMAGE}"
                 }
             }
@@ -53,7 +53,7 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    echo "Pushing Docker image to Docker Hub..."
+                    echo "Pushing Docker image to Docker Hub..." >> app.log
                     sh """
                     echo ${DOCKER_HUB_CREDENTIALS_USR} | docker login -u ${DOCKER_HUB_CREDENTIALS_USR} --password-stdin
                     docker push ${DOCKER_IMAGE}
@@ -64,7 +64,7 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    echo "Running Docker container..."
+                    echo "Running Docker container..." >> app.log
                     sh "docker run -d -p 80:80 ${DOCKER_IMAGE}"
                 }
             }
@@ -73,14 +73,14 @@ pipeline {
 
     post {
         always {
-            echo "Cleaning up workspace..."
+            echo "Cleaning up workspace..." >> app.log
             cleanWs()
         }
         success {
-            echo "Pipeline completed successfully!"
+            echo "Pipeline completed successfully!" >> app.log
         }
         failure {
-            echo "Pipeline failed. Check logs for details."
+            echo "Pipeline failed. Check logs for details." >> app.log
         }
     }
 }
