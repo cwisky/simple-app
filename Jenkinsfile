@@ -8,11 +8,19 @@ pipeline {
     }
 
     stages {
+        stage('Cleanup Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
         stage('Clone Repository') {
             steps {
                 script {
-                    echo "Cloning GitHub repository..." >> app.log
-                    sh "git clone ${GITHUB_REPO} app"
+                    echo "Cloning GitHub repository..."
+                    withCredentials([usernamePassword(credentialsId: 'GitHub_ID_PWD', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
+                        sh "git clone https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/cwisky/simple-app.git app"
+                    }
                 }
             }
         }
@@ -20,13 +28,13 @@ pipeline {
         stage('Prepare JAR File') {
             steps {
                 script {
-                    echo "Preparing JAR file..." >> app.log
+                    echo "Preparing JAR file..."
                     dir('app') {
                         sh """
                         if [ -f ${JAR_FILE} ]; then
-                            echo "JAR file found."
+                            echo "JAR file ${JAR_FILE} found." >> ../app.log
                         else
-                            echo "JAR file not found. Ensure the project is built correctly." >> app.log
+                            echo "JAR file not found. Ensure the project is built correctly." >> ../app.log
                             exit 1
                         fi
                         """
@@ -38,7 +46,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    echo "Building Docker image..." >> app.log
+                    echo "Building Docker image..."
                     writeFile file: 'Dockerfile', text: """
                     FROM openjdk:21-jre-slim
                     COPY ${JAR_FILE} /simple-app.jar
@@ -48,7 +56,7 @@ pipeline {
                 }
             }
         }
-        /*
+
         stage('Push to Docker Hub') {
             steps {
                 script {
@@ -61,12 +69,12 @@ pipeline {
                     }
                 }
             }
-        }*/
+        }
 
         stage('Run Docker Container') {
             steps {
                 script {
-                    echo "Running Docker container..." >> app.log
+                    echo "Running Docker container..."
                     sh """
                     docker ps -q --filter 'ancestor=${DOCKER_IMAGE}' | xargs --no-run-if-empty docker stop
                     docker run -d -p 8080:80 ${DOCKER_IMAGE}
@@ -78,7 +86,7 @@ pipeline {
 
     post {
         always {
-            echo "Cleaning up workspace..." >> app.log
+            echo "Cleaning up workspace..."
             cleanWs()
         }
     }
