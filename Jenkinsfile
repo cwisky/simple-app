@@ -1,65 +1,86 @@
 pipeline {
     agent any
+
     environment {
-        DOCKER_IMAGE = "ghcr.io/cwisky/simple-app:1.0"
-        CONTAINER_NAME = "simple-app-container"
-        LOG_FILE = "/var/log/simple-app/app.log"
+        DOCKER_HUB_CREDENTIALS = credentials('Docker_Hub_id_pwd') // Docker Hub 자격 증명 (Jenkins에서 설정 필요)
+        DOCKER_IMAGE = "cwisky/simple-app:1.0" // Docker 이미지 이름 및 태그
+        GITHUB_REPO = "https://github.com/cwisky/simple-app.git" // GitHub 리포지토리 URL
+        JAR_FILE = "simple-app.jar" // 다운로드할 JAR 파일 이름
     }
+
     stages {
-        stage('Prepare Logs') {
+        stage('Clone Repository') {
             steps {
                 script {
-                    sh "sudo mkdir -p /var/log/simple-app"
-                    sh "sudo touch /var/log/simple-app/app.log"
-                    sh "sudo chmod -R 775 /var/log/simple-app"
-                    sh "sudo chown -R jenkins:jenkins /var/log/simple-app"
+                    echo "Cloning GitHub repository..."
+                    sh "git clone ${GITHUB_REPO} app"
                 }
             }
         }
-        stage('Pull Docker Image') {
+        stage('Prepare JAR File') {
             steps {
                 script {
-                    sh "echo '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' | docker login ghcr.io -u cwisky --password-stdin"
-                    //sh "sudo docker login ghcr.io -u cwisky -p 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"
-                    sh "sudo docker pull ${DOCKER_IMAGE}"
+                    echo "Preparing JAR file..."
+                    dir('app') {
+                        sh "cp target/${JAR_FILE} ../"
+                    }
                 }
             }
         }
-        stage('Stop and Remove Existing Container') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    // Stop the container only if it is running
+                    echo "Building Docker image..."
                     sh """
-                        if [ \$(sudo docker ps -q -f name=${CONTAINER_NAME}) ]; then
-                            echo "Stopping running container: ${CONTAINER_NAME}"
-                            sudo docker stop ${CONTAINER_NAME}
-                        fi
+                    cat <<EOF > Dockerfile
+                    FROM openjdk:11-jre-slim
+                    COPY ${JAR_FILE} /app.jar
+                    CMD ["java", "-jar", "/app.jar"]
+                    EOF
                     """
-                    // Remove the container only if it exists
+                    sh "docker build -t ${DOCKER_IMAGE} ."
+                }
+            }
+        }
+        stage('Tag Docker Image') {
+            steps {
+                script {
+                    echo "Tagging Docker image..."
+                    sh "docker tag ${DOCKER_IMAGE} ${DOCKER_IMAGE}"
+                }
+            }
+        }
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    echo "Pushing Docker image to Docker Hub..."
                     sh """
-                        if [ \$(sudo docker ps -a -q -f name=${CONTAINER_NAME}) ]; then
-                            echo "Removing existing container: ${CONTAINER_NAME}"
-                            sudo docker rm ${CONTAINER_NAME}
-                        fi
+                    echo ${DOCKER_HUB_CREDENTIALS_USR} | docker login -u ${DOCKER_HUB_CREDENTIALS_USR} --password-stdin
+                    docker push ${DOCKER_IMAGE}
                     """
                 }
             }
         }
-        stage('Run Container') {
+        stage('Run Docker Container') {
             steps {
                 script {
-                    sh """
-                        sudo docker run -d \
-                        --name ${CONTAINER_NAME} \
-                        -p 8081:8081 \
-                        ${DOCKER_IMAGE}
-                    """
-                    // Append logs from the container to the log file
-                    sh """
-                        sudo docker logs -f ${CONTAINER_NAME} >> ${LOG_FILE} 2>&1 &
-                    """
+                    echo "Running Docker container..."
+                    sh "docker run -d -p 80:80 ${DOCKER_IMAGE}"
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            echo "Cleaning up workspace..."
+            cleanWs()
+        }
+        success {
+            echo "Pipeline completed successfully!"
+        }
+        failure {
+            echo "Pipeline failed. Check logs for details."
         }
     }
 }
