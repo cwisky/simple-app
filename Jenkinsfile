@@ -8,9 +8,17 @@ pipeline {
     }
 
     stages {
+        /*
         stage('Cleanup Workspace') {
             steps {
                 cleanWs()
+            }
+        }*/
+
+        stage('Checkout') {
+            steps {
+                echo 'Checking out the repository...' >> app.log
+                checkout scm // 현재 브랜치 소스를 클론
             }
         }
 
