@@ -33,7 +33,7 @@ pipeline {
         stage('Prepare JAR File') {
             steps {
                 script {
-                    echo "Preparing JAR file..." >> app.log
+                    echo "Preparing JAR file..."
                     //dir('app') {
                         sh """
                         if [ -f ${JAR_FILE} ]; then
