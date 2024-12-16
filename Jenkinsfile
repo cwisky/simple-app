@@ -24,7 +24,7 @@ pipeline {
                     branches: [[name: 'main']],
                     userRemoteConfigs: [[
                         credentialsId: 'GitHub_ID_PWD',
-                        url: '${GITHUB_REPO}'
+                        url: 'https://github.com/cwisky/simple-app'
                     ]]
                 ])
                 // JAR 파일에 실행 권한 추가
