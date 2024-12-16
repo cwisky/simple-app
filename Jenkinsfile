@@ -28,7 +28,7 @@ pipeline {
                     ]]
                 ])
                 // JAR 파일에 실행 권한 추가
-                sh 'chmod +x ./spring-app.jar'
+                sh 'chmod +x ./simple-app.jar'
             }
         }
 
