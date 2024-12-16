@@ -24,11 +24,11 @@ pipeline {
                     branches: [[name: 'main']],
                     userRemoteConfigs: [[
                         credentialsId: 'GitHub_ID_PWD',
-                        url: 'https://github.com/cwisky/simple-app'
+                        url: '${GITHUB_REPO}'
                     ]]
                 ])
                 // JAR 파일에 실행 권한 추가
-                sh 'chmod +x ./simple-app.jar'
+                sh 'chmod +x ./${JAR-FILE}'
             }
         }
 
