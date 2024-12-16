@@ -27,6 +27,8 @@ pipeline {
                         url: 'https://github.com/cwisky/simple-app'
                     ]]
                 ])
+                // JAR 파일에 실행 권한 추가
+                sh 'chmod +x ./spring-app.jar'
             }
         }
 
