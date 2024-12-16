@@ -16,10 +16,17 @@ pipeline {
             }
         }
 
-        stage('Checkout') {
+        stage('Git Clone') {
             steps {
-                echo 'Checking out the repository...' >> app.log
-                checkout scm // 현재 브랜치 소스를 클론
+                echo 'Cloning Git repository...'
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: 'main']],
+                    userRemoteConfigs: [[
+                        credentialsId: 'GitHub_ID_PWD',
+                        url: 'https://github.com/cwisky/simple-app'
+                    ]]
+                ])
             }
         }
         /*
