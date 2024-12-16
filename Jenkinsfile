@@ -79,7 +79,7 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    echo "Running Docker container..." >> app.log
+                    echo "Running Docker container..."
                     sh """
                     docker ps -q --filter 'ancestor=${DOCKER_IMAGE}' | xargs --no-run-if-empty docker stop
                     docker run -d -p 8080:80 ${DOCKER_IMAGE}
