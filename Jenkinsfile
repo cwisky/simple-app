@@ -51,7 +51,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    echo "Building Docker image..."
+                    echo "Building Docker image..." 
                     writeFile file: 'Dockerfile', text: """
                     FROM openjdk:21-jre-slim
                     COPY ${JAR_FILE} /simple-app.jar
