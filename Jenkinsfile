@@ -12,7 +12,7 @@ pipeline {
         stage('Cleanup Workspace') {
             steps {
                 cleanWs()
-                echo 'Cleaned up' >> app.log
+                echo 'Cleaned up'
             }
         }
 
