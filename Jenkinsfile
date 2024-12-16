@@ -19,14 +19,7 @@ pipeline {
         stage('Git Clone') {
             steps {
                 echo 'Cloning Git repository...'
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: 'main']],
-                    userRemoteConfigs: [[
-                        credentialsId: 'GitHub_ID_PWD',
-                        url: 'https://github.com/cwisky/simple-app'
-                    ]]
-                ])
+                git 'https://github.com/cwisky/simple.app'
             }
         }
         /*
