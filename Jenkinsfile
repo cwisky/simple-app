@@ -24,7 +24,7 @@ pipeline {
                     branches: [[name: 'main']],
                     userRemoteConfigs: [[
                         credentialsId: 'GitHub_ID_PWD',       // Jenkins에서 github의 id, pwd를 등록하고 아이디를 'GitHub_ID_PWD' 으로 지정해야 함
-                        url: 'https://github.com/cwisky/simple-app.git'
+                        url: '${GITHUB_REPO}'
                     ]]
                 ])
                 // JAR 파일에 실행 권한 추가
