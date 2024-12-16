@@ -53,7 +53,7 @@ pipeline {
                 script {
                     echo "Building Docker image..." 
                     writeFile file: 'Dockerfile', text: """
-                    FROM openjdk:21-jre-slim
+                    FROM openjdk:21-slim
                     COPY ${JAR_FILE} /simple-app.jar
                     CMD ["java", "-jar", "/simple-app.jar"]
                     """
