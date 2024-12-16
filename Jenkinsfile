@@ -29,36 +29,25 @@ pipeline {
                 ])
             }
         }
-        /*
-        stage('Clone Repository') {
-            steps {
-                script {
-                    echo "Cloning GitHub repository..." >> app.log
-                    withCredentials([usernamePassword(credentialsId: 'GitHub_ID_PWD', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
-                        sh "git clone https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/cwisky/simple-app.git app"
-                    }
-                }
-            }
-        }
 
         stage('Prepare JAR File') {
             steps {
                 script {
                     echo "Preparing JAR file..." >> app.log
-                    dir('app') {
+                    //dir('app') {
                         sh """
                         if [ -f ${JAR_FILE} ]; then
-                            echo "JAR file ${JAR_FILE} found." >> ../app.log
+                            echo "JAR file ${JAR_FILE} found."
                         else
-                            echo "JAR file not found. Ensure the project is built correctly." >> ../app.log
+                            echo "JAR file not found. Ensure the project is built correctly."
                             exit 1
                         fi
                         """
-                    }
+                   // }
                 }
             }
         }
-
+        /*
         stage('Build Docker Image') {
             steps {
                 script {
