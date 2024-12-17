@@ -68,7 +68,7 @@ pipeline {
         stage('Docker Login') {  // Docker Hub에 도커 이미지를 업로드할 때 요구됨
             steps {
                 script {
-                    // Docker Hub 로그인 (Jenkins Credentials 사용)
+                    // Docker Hub 로그인 (Jenkins에 등록된 Docker Hub Credentials 사용)
                     echo "Logging in to Docker Hub..."
                     withCredentials([usernamePassword(
                         credentialsId: 'Docker_Hub_Credentials', //Jenkins 관리 > Credentials에 등록된 Credentials ID( Jenkins 관리 > Credentials 에서 확인 가능)
@@ -82,20 +82,15 @@ pipeline {
             }
         }
         
-        /*
-        stage('Push to Docker Hub') {
+        stage('Docker Push') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'Docker_Hub_id_pwd', usernameVariable: 'DOCKER_HUB_CREDENTIALS_USR', passwordVariable: 'DOCKER_HUB_CREDENTIALS_PSW')]) {
-                        echo "Pushing Docker image to Docker Hub..."
-                        sh """
-                        echo ${DOCKER_HUB_CREDENTIALS_PSW} | docker login -u ${DOCKER_HUB_CREDENTIALS_USR} --password-stdin
-                        docker push ${DOCKER_IMAGE}
-                        """
-                    }
+                    // Docker Hub에 이미지 푸시
+                    echo "Pushing Docker Image to Docker Hub..."
+                    sh "docker push ${DOCKER_IMAGE}"
                 }
             }
-        }*/
+        }
         
         stage('Run Docker Container') {
             steps {
@@ -111,9 +106,11 @@ pipeline {
     }
     /*
     post {
-        always {
-            echo "Cleaning up workspace..."
-            //cleanWs()
+        success {
+            echo "Docker image has been successfully uploaded to Docker Hub."
+        }
+        failure {
+            echo "Pipeline failed. Check the logs for details."
         }
     }*/
 }
