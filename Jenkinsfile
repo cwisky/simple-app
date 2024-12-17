@@ -5,6 +5,8 @@ pipeline {
         DOCKER_IMAGE = "cwisky/simple-app:1.0"
         GITHUB_REPO = "https://github.com/cwisky/simple-app.git"
         JAR_FILE = "simple-app.jar"
+        DOCKER_IMAGE = 'cwisky/simple-app' // Docker 이미지 이름
+        DOCKER_TAG = 'latest' // 태그
     }
 
     stages {
@@ -64,6 +66,24 @@ pipeline {
                 }
             }
         }
+
+        stage('Docker Login') {  // Docker Hub에 도커 이미지를 업로드할 때 요구됨
+            steps {
+                script {
+                    // Docker Hub 로그인 (Jenkins Credentials 사용)
+                    echo "Logging in to Docker Hub..."
+                    withCredentials([usernamePassword(
+                        credentialsId: 'Docker_Hub_Credentials', //Jenkins 관리 > Credentials에 등록된 Credentials ID( Jenkins 관리 > Credentials 에서 확인 가능)
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASSWORD')]) {
+                        
+                        sh "echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin"
+                    }
+                    echo "Login to Docker Hub Success!"
+                }
+            }
+        }
+        
         /*
         stage('Push to Docker Hub') {
             steps {
