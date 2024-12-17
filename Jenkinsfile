@@ -49,7 +49,7 @@ pipeline {
                 }
             }
         }
-        /*
+        
         stage('Build Docker Image') {
             steps {
                 script {
@@ -60,9 +60,10 @@ pipeline {
                     CMD ["java", "-jar", "/simple-app.jar"]
                     """
                     sh "docker build -t ${DOCKER_IMAGE} ."
+                    echo "Docker image created!" 
                 }
             }
-        }*/
+        }
         /*
         stage('Push to Docker Hub') {
             steps {
