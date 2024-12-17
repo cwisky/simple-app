@@ -31,7 +31,7 @@ pipeline {
                 sh 'chmod +x ./${JAR_FILE}'
             }
         }
-        /*
+        
         stage('Prepare JAR File') {
             steps {
                 script {
@@ -49,7 +49,7 @@ pipeline {
                 }
             }
         }
-        
+        /*
         stage('Build Docker Image') {
             steps {
                 script {
