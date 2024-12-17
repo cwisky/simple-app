@@ -5,7 +5,6 @@ pipeline {
         DOCKER_IMAGE = "cwisky/simple-app:1.0"
         GITHUB_REPO = "https://github.com/cwisky/simple-app.git"
         JAR_FILE = "simple-app.jar"
-        DOCKER_IMAGE = 'cwisky/simple-app' // Docker 이미지 이름
         DOCKER_TAG = 'latest' // 태그
     }
 
@@ -61,7 +60,7 @@ pipeline {
                     COPY ${JAR_FILE} /simple-app.jar
                     CMD ["java", "-jar", "/simple-app.jar"]
                     """
-                    sh "docker build -t ${DOCKER_IMAGE} ."
+                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
                     echo "Docker image created!" 
                 }
             }
