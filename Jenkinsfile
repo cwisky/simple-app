@@ -104,7 +104,7 @@ pipeline {
             }
         }
     }
-    /*
+    
     post {
         success {
             echo "Docker image has been successfully uploaded to Docker Hub."
@@ -112,5 +112,5 @@ pipeline {
         failure {
             echo "Pipeline failed. Check the logs for details."
         }
-    }*/
+    }
 }
