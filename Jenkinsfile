@@ -31,7 +31,7 @@ pipeline {
                 sh 'chmod +x ./${JAR_FILE}'
             }
         }
-
+        /*
         stage('Prepare JAR File') {
             steps {
                 script {
@@ -62,7 +62,7 @@ pipeline {
                     sh "docker build -t ${DOCKER_IMAGE} ."
                 }
             }
-        }
+        }*/
         /*
         stage('Push to Docker Hub') {
             steps {
@@ -77,7 +77,7 @@ pipeline {
                 }
             }
         }*/
-        
+        /*
         stage('Run Docker Container') {
             steps {
                 script {
@@ -89,7 +89,7 @@ pipeline {
                 }
             }
         }
-    }
+    }*/
     /*
     post {
         always {
